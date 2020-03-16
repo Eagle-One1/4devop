@@ -1,0 +1,3 @@
+[submodule "nginx/static-website-example"]
+	path = nginx/static-website-example
+	url = https://github.com/diranetafen/static-website-example.git
