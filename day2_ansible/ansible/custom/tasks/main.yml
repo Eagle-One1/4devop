@@ -1,0 +1,92 @@
+---
+# tasks file for custom
+
+- name: install "epel-release" repository
+  package:
+    name: "epel-release"
+    state: present
+
+- name: install nginx
+  package:
+    name: "nginx"
+    state: present
+
+- name: enable and start nginx
+  systemd:
+    name: nginx
+    state: started
+    enabled: yes
+
+- name: cleann up /usr/share/nginx/html/
+  shell: /bin/rm -rf /usr/share/nginx/html/*
+
+- name: cleann up /usr/share/nginx/html/
+  shell: /bin/rm -rf /usr/share/nginx/html/.git
+
+- name: install git
+  package:
+    name: git
+    state: present
+
+- name: clone static-website-example from git
+  git:
+    repo: https://github.com/diranetafen/static-website-example.git
+    dest: /usr/share/nginx/html/
+
+- name: enable and start firewalld
+  systemd:
+    name: firewalld
+    state: started
+    enabled: yes
+
+- name: open https port
+  firewalld:
+    service: https
+    permanent: yes
+    state: enabled
+
+- name: open http port
+  firewalld:
+    service: http
+    permanent: yes
+    state: enabled
+
+
+- name: change nginx port 
+  replace: 
+    path: "/etc/nginx/nginx.conf"
+    regexp: " 80 "
+    replace: " 8080 "
+
+- name: change nginx port 
+  replace: 
+    path: "/etc/nginx/nginx.conf"
+    regexp: ":80 "
+    replace: ":8080 "
+
+- name: reload nginx
+  systemd:
+    name: nginx
+    state: reloaded
+
+### haproxy
+- name: install haproxy
+  package:
+    name: haproxy
+    state: present
+
+- name: enable and start haproxy
+  systemd:
+    name: haproxy
+    state: started
+    enabled: yes
+
+- name: copy haproxy config
+  template:
+    src: haproxy.cfg.j2
+    dest: /etc/haproxy/haproxy.cfg
+
+- name: reload haproxy
+  systemd:
+    name: haproxy
+    state: reloaded
