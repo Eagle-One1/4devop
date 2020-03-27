@@ -39,18 +39,14 @@
     state: started
     enabled: yes
 
-- name: open https port
+- name: open http and https port
   firewalld:
-    service: https
+    service: "{{ item }}"
     permanent: yes
     state: enabled
-
-- name: open http port
-  firewalld:
-    service: http
-    permanent: yes
-    state: enabled
-
+  with_items:
+    - http
+    - https
 
 - name: change nginx port 
   replace: 
