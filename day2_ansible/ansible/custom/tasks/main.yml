@@ -42,6 +42,7 @@
 - name: open http and https port
   firewalld:
     service: "{{ item }}"
+    immediate: yes
     permanent: yes
     state: enabled
   with_items:
