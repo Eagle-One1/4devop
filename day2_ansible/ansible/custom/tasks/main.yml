@@ -82,8 +82,8 @@
     enabled: yes
 
 - name: copy haproxy config
-  template:
-    src: haproxy.cfg.j2
+  copy:
+    src: files/haproxy.cfg
     dest: /etc/haproxy/haproxy.cfg
 
 - name: reload haproxy
